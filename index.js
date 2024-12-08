@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import { register } from "./controllers/auth.js";
+import { login, register } from "./controllers/auth.js";
 
 const app = express()
 dotenv.config()
@@ -19,6 +19,7 @@ app.use(express.json())
 
 //Routes
 app.use('/api/auth/register', register)
+app.use('/api/auth/login', login)
 
 async function start() {
     try {

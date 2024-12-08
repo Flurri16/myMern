@@ -1,6 +1,7 @@
 import User from '../models/User.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+
 export const register = async (req, res) => {
     try {
         // console.log(req.body);      // Тело запроса
@@ -29,5 +30,24 @@ export const register = async (req, res) => {
     } catch (e) {
         console.log(e)
         res.json({message: "Registration error."})
+    }
+}
+
+export const login = async (req, res) => {
+    try {
+        const {username, password} = req.body
+        const user = await User.findOne({username})
+        if(!user) return res.json({message: 'User is not exist.'})
+            
+        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+        if(!isPasswordCorrect) return res.json({message: "Password is not correct."})    
+                
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "30d"})
+        
+        res.json({user, message: 'Well come!', token})
+
+    } catch (e) {
+        console.log(e)
+        res.json({message: "Login error."})
     }
 }
