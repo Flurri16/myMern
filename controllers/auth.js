@@ -44,10 +44,24 @@ export const login = async (req, res) => {
                 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "30d"})
         
-        res.json({user, message: 'Well come!', token})
+        res.json({user, message: 'You was logined!', token})
 
     } catch (e) {
         console.log(e)
         res.json({message: "Login error."})
     }
-}
+} 
+
+export const getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId)
+        if(!user) return res.json({message: 'User is not exist.'})       
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "30d"})
+        
+        res.json({user, message: 'Well come!', token})
+
+    } catch (e) {
+        console.log(e)
+        res.json({message: "Autorization error."})
+    }
+} 

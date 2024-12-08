@@ -2,7 +2,8 @@ import express from "express";
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import { login, register } from "./controllers/auth.js";
+import { getMe, login, register } from "./controllers/auth.js";
+import { checkAuth } from "./utils/checkAuth.js";
 
 const app = express()
 dotenv.config()
@@ -20,7 +21,7 @@ app.use(express.json())
 //Routes
 app.use('/api/auth/register', register)
 app.use('/api/auth/login', login)
-
+app.use('/auth/me', checkAuth, getMe)
 async function start() {
     try {
         await mongoose.connect(
